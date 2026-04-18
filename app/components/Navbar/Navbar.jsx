@@ -18,6 +18,7 @@ const Navbar = () => {
 
   const menuItems = ["Expertises", "Work", "About", "Contact"];
 
+  // 🔥 Scroll hide/show navbar
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > lastScrollY && window.scrollY > 50) {
@@ -32,39 +33,42 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // 🔥 Disable scroll when menu open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => (document.body.style.overflow = "");
   }, [menuOpen]);
 
+  // 🔥 DESKTOP HOVER EFFECT (TEXT SCROLL + BLACK BG)
   useEffect(() => {
     const items = document.querySelectorAll(".nav-item");
 
+    const handlers = [];
+
     items.forEach((item) => {
       const text = item.querySelector(".nav-text");
+      const duplicate = item.querySelector(".nav-text-duplicate");
 
       const enter = () => {
-        gsap.killTweensOf(item);
-        gsap.killTweensOf(text);
+        gsap.killTweensOf([item, text, duplicate]);
 
         const tl = gsap.timeline();
 
-        tl.set(item, { y: 10, scale: 0.98 });
-
+        // lift
         tl.to(item, {
           y: -6,
-          scale: 1,
-          duration: 0.35,
+          duration: 0.3,
           ease: "power3.out",
         });
 
+        // bg white → orange → black
         tl.to(
           item,
           {
             backgroundColor: "#fdba74",
-            duration: 0.12,
+            duration: 0.15,
           },
-          0,
+          0
         );
 
         tl.to(item, {
@@ -72,43 +76,79 @@ const Navbar = () => {
           duration: 0.25,
         });
 
+        // text scroll up
         tl.to(
           text,
           {
-            y: -2,
-            duration: 0.2,
+            y: "-100%",
             color: "#ffffff",
+            duration: 0.3,
+            ease: "power3.out",
           },
-          0,
+          0
+        );
+
+        tl.to(
+          duplicate,
+          {
+            y: "-100%",
+            color: "#ffffff",
+            duration: 0.3,
+            ease: "power3.out",
+          },
+          0
         );
       };
 
       const leave = () => {
-        gsap.to(item, {
+        gsap.killTweensOf([item, text, duplicate]);
+
+        const tl = gsap.timeline();
+
+        tl.to(item, {
           y: 0,
-          scale: 1,
           backgroundColor: "#ffffff",
-          duration: 0.35,
+          duration: 0.3,
           ease: "power3.out",
         });
 
-        gsap.to(text, {
-          y: 0,
-          color: "#000000",
-          duration: 0.25,
-        });
+        // reset text
+        tl.to(
+          text,
+          {
+            y: "0%",
+            color: "#000000",
+            duration: 0.25,
+          },
+          0
+        );
+
+        tl.to(
+          duplicate,
+          {
+            y: "0%",
+            color: "#000000",
+            duration: 0.25,
+          },
+          0
+        );
       };
 
       item.addEventListener("mouseenter", enter);
       item.addEventListener("mouseleave", leave);
 
-      return () => {
+      handlers.push({ item, enter, leave });
+    });
+
+    return () => {
+      handlers.forEach(({ item, enter, leave }) => {
         item.removeEventListener("mouseenter", enter);
         item.removeEventListener("mouseleave", leave);
-      };
-    });
+      });
+    };
   }, []);
 
+  // 🔥 MOBILE MENU ANIMATION
   useEffect(() => {
     const menu = menuRef.current;
     if (!menu) return;
@@ -145,7 +185,7 @@ const Navbar = () => {
         duration: 0.4,
         ease: "power3.out",
       },
-      "-=0.3",
+      "-=0.3"
     );
 
     if (menuOpen) {
@@ -165,17 +205,24 @@ const Navbar = () => {
         <div className="h-[12vh] flex items-center justify-between px-4 md:px-8">
           <Logo />
 
+          {/* 🔥 DESKTOP MENU */}
           <div className="hidden md:flex bg-white rounded-xl px-4 py-2 gap-1 text-sm font-semibold">
             {menuItems.map((item) => (
               <div
                 key={item}
-                className="nav-item cursor-pointer px-5 py-2 rounded-lg bg-white"
+                className="nav-item cursor-pointer px-5 py-2 rounded-lg bg-white overflow-hidden"
               >
-                <span className="nav-text text-black">{item}</span>
+                <div className="relative h-5 overflow-hidden">
+                  <span className="nav-text block">{item}</span>
+                  <span className="nav-text-duplicate block absolute left-0 top-full">
+                    {item}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
 
+          {/* 🔥 BUTTON */}
           <div className="hidden md:flex bg-[#fcb8fa] px-4 py-2 rounded-xl items-center gap-3">
             <p className="text-sm font-semibold">Get Results</p>
             <div className="bg-white p-2 rounded-lg">
@@ -183,23 +230,33 @@ const Navbar = () => {
             </div>
           </div>
 
+          {/* 🔥 MOBILE BUTTON */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className={`md:hidden mt-7  mr-5 ${menuOpen ? "bg-white" : " bg-[#fcb8fa]"}  p-4 rounded-lg flex flex-col gap-1 z-50`}
+            className={`md:hidden mt-7 mr-5 ${
+              menuOpen ? "bg-white" : " bg-[#fcb8fa]"
+            } p-4 rounded-lg flex flex-col gap-1 z-50`}
           >
             <span
-              className={`h-0.5 w-6 bg-black transition ${menuOpen ? "rotate-45 translate-y-1.5  " : ""}`}
+              className={`h-0.5 w-6 bg-black transition ${
+                menuOpen ? "rotate-45 translate-y-1.5" : ""
+              }`}
             />
             <span
-              className={`h-0.5 w-6 bg-black transition ${menuOpen ? "opacity-0" : ""}`}
+              className={`h-0.5 w-6 bg-black transition ${
+                menuOpen ? "opacity-0" : ""
+              }`}
             />
             <span
-              className={`h-0.5 w-6 bg-black transition ${menuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}
+              className={`h-0.5 w-6 bg-black transition ${
+                menuOpen ? "-rotate-45 -translate-y-1.5" : ""
+              }`}
             />
           </button>
         </div>
       </nav>
 
+      {/* 🔥 MOBILE MENU */}
       <div
         ref={menuRef}
         className="fixed inset-0 z-40 mt-4 ml-3 mr-3 rounded-2xl md:hidden flex items-center justify-center"
@@ -210,7 +267,7 @@ const Navbar = () => {
             <button
               key={item}
               onClick={() => setMenuOpen(false)}
-              className="mobile-item w-40 py-3  p-4 rounded-lg bg-white  text-2xl font-semibold"
+              className="mobile-item w-40 py-3 p-4 rounded-lg bg-white text-2xl font-semibold"
             >
               {item}
             </button>
