@@ -129,7 +129,7 @@ const Cards = () => {
         const cur = els[i];
         const next = els[i + 1];
         if (!cur || !next) continue;
-        tl.to(cur, { scale: 0.88, rotation: 30, duration: 1, ease: "none" }, i);
+        tl.to(cur, { scale: 0.88, rotation: 5, duration: 1, ease: "none" }, i);
         tl.to(next, { y: "0%", duration: 1, ease: "none" }, i);
       }
 
@@ -181,6 +181,7 @@ const Cards = () => {
 const CardContent = ({ card }) => {
   return (
     <div className="h-full w-full flex flex-col md:flex-row justify-between items-stretch px-6 py-8 md:px-10 md:py-10 lg:px-14 lg:py-12 gap-6">
+
       <div className="flex flex-col justify-between flex-1 min-w-0">
         <div>
           <span
