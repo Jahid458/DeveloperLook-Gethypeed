@@ -93,7 +93,7 @@ const Hero = () => {
   return (
     <div className="min-h-screen w-full bg-[#faf4ec]">
     
-      <div className="text-[10vw] md:text-[7vw] pt-[15vh] px-[4vw] font-semibold tracking-tighter leading-none">
+      <div className="text-[10vw] md:text-[7vw] pt-[40vh] px-[4vw] font-semibold tracking-tighter leading-none">
         <div>
           <span>Get</span>
           <span className="ml-2">Hyped.</span>
