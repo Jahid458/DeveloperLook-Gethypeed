@@ -112,7 +112,7 @@ function ProjectCard({ project, offsetY = 0 }) {
             left: 0,
             right: 0,
             zIndex: 30,
-            padding: "0 10px 10px",   /* gap around the pill */
+            padding: "0 10px 10px",   
           }}
         >
           <div
