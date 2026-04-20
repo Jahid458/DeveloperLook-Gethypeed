@@ -17,6 +17,7 @@ const page = () => {
       <Cards/>
       <ContentDatScoort />
       <BrandCarousel/>
+      
    
     </div>
   )

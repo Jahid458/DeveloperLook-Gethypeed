@@ -31,6 +31,7 @@ export default function BrandCarousel() {
             </div>
           ))}
         </div>
+        <hr className={styles.hr} />
       </div>
     </section>
   );
